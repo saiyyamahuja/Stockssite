@@ -1,0 +1,12 @@
+{%extends "layout.html"%}
+{%block content%}
+<script type="text/javascript" src={{cdn_js | safe}} integrity="sha384-T2yuo9Oe71Cz/I4X9Ac5+gpEa5a8PpJCDlqKYO0CfAuEszu1JrXLl8YugMqYe3sM" crossorigin="anonymous"></script>
+<div class = "Plot">
+    <h1> This is the plot page </h1>
+</div>
+<script>
+var x = prompt("Enter the company code: ")
+</script>
+{{script1 | safe}}
+{{div1 | safe}}
+{%endblock%}

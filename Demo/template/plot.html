@@ -1,0 +1,11 @@
+{%extends "layout.html"%}
+{%block content%}
+
+<form action="{{ url_for("plot")}}" method="post"> 
+<label for="CompanyCode">Company Code:</label> 
+<input type="text" id="CompanyCode" name="ccode" placeholder="Company Code"> 
+<button type="submit">Submit</button>
+<button type="reset">Reset</button>
+
+
+{%endblock%}

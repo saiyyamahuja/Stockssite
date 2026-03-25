@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stock-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: stock-app
+  template:
+    metadata:
+      labels:
+        app: stock-app
+    spec:
+      containers:
+      - name: stock-app
+        image: <ACR_NAME>.azurecr.io/stock-app:latest
+        ports:
+        - containerPort: 5050

@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="plot">
+    <h1>Stock Plot - {{ request.args.get("ccode") }}</h1>
+
+    <script src="{{ cdn_js }}"></script>
+    {{ div1 | safe }}
+    {{ script1 | safe }}
+</div>
+
+{% endblock %}

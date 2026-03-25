@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="plot">
+    <h1>Search Stock</h1>
+
+    <form action="{{ url_for('gfg') }}" method="post" class="search-box">
+        <input type="text" name="ccode" placeholder="Enter stock (AAPL, TSLA)">
+        <button type="submit">Analyze</button>
+    </form>
+</div>
+
+{% endblock %}

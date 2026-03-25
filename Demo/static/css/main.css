@@ -1,90 +1,157 @@
-body {
+/* Reset */
+* {
   margin: 0;
   padding: 0;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  color: #060;
+  box-sizing: border-box;
 }
 
-/*
- * Formatting the header area
- */
+/* Body */
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #f5f7fb;
+  color: #333;
+}
 
+/* Navbar */
 header {
-  background-color: #DFB887;
-  height: 35px;
-  width: 100%;
-  opacity: .9;
-  margin-bottom: 10px;
+  background: #111827;
+  padding: 15px 0;
 }
 
-header h1.logo {
-  margin: 0;
-  font-size: 1.7em;
-  color: #fff;
-  text-transform: uppercase;
-  float: left;
-}
-
-header h1.logo:hover {
-  color: #fff;
-  text-decoration: none;
-}
-
-/*
- * Center the body content
- */
-
+/* Container */
 .container {
-  width: 1200px;
-  margin: 0 auto;
+  width: 90%;
+  max-width: 1100px;
+  margin: auto;
 }
 
-div.home {
-  padding: 10px 0 30px 0;
-  background-color: #E6E6FA;
-  -webkit-border-radius: 6px;
-     -moz-border-radius: 6px;
-          border-radius: 6px;
+/* Flex Navbar Fix */
+header .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-div.about {
-  padding: 10px 0 30px 0;
-  background-color: #E6E6FA;
-  -webkit-border-radius: 6px;
-     -moz-border-radius: 6px;
-          border-radius: 6px;
+/* Logo */
+.logo {
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: 600;
 }
 
-h2 {
-  font-size: 3em;
-  margin-top: 40px;
-  text-align: center;
-  letter-spacing: -2px;
+/* Tagline (your name) */
+.tagline {
+  font-size: 0.8rem;
+  color: #9ca3af;
+  margin-left: 8px;
 }
 
-h3 {
-  font-size: 1.7em;
-  font-weight: 100;
-  margin-top: 30px;
-  text-align: center;
-  letter-spacing: -1px;
-  color: #999;
-}
-
+/* Menu */
 .menu {
-  float: right;
-  margin-top: 8px;
+  list-style: none;
+  display: flex;
 }
 
 .menu li {
-  display: inline;
+  margin-left: 20px;
 }
 
-.menu li + li {
-  margin-left: 35px;
-}
-
-.menu li a {
-  color: #444;
+.menu a {
+  color: #d1d5db;
   text-decoration: none;
+  transition: 0.3s;
+  font-size: 0.95rem;
+}
+
+.menu a:hover {
+  color: #60a5fa;
+}
+
+/* Card sections */
+.home,
+.about,
+.plot {
+  background: #fff;
+  padding: 30px;
+  margin-top: 20px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+}
+
+/* Headings */
+h1 {
+  margin-bottom: 10px;
+}
+
+/* Form */
+form {
+  margin-top: 20px;
+}
+
+/* Input */
+input {
+  padding: 10px;
+  width: 250px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  margin-right: 10px;
+  outline: none;
+}
+
+input:focus {
+  border-color: #2563eb;
+}
+
+/* Button */
+button {
+  padding: 10px 15px;
+  border: none;
+  background: #2563eb;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  background: #1d4ed8;
+}
+
+/* Plot container fix */
+.plot {
+  overflow-x: auto;
+}
+
+/* Responsive tweak */
+@media (max-width: 600px) {
+  .menu {
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  .menu li {
+    margin: 5px 0;
+  }
+
+  input {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+}
+
+/* Search box alignment */
+
+.search-box {
+  display: flex;
+  max-width: 500px;
+}
+
+/* Input grow */
+.search-box input {
+  flex: 1;
+}
+
+/* Button spacing */
+.search-box button {
+  margin-left: 10px;
 }

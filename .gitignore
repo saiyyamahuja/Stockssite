@@ -1,0 +1,42 @@
+# Mac system files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+virtual/
+env/
+
+# Environment variables
+.env
+
+# Flask stuff
+instance/
+.webassets-cache
+
+# IDE / Editor files
+.vscode/
+.idea/
+*.swp
+
+# Logs
+*.log
+
+# SQLite database (if you add later)
+*.sqlite3
+
+# Temporary files
+*.bak
+*.tmp
+
+# OS generated files
+Thumbs.db
+
+# Bokeh / build cache (optional)
+*.html

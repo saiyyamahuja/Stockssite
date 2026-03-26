@@ -1,10 +1,10 @@
-# Stocks_site/Demo/k8s/deployment.yaml
+# Stocks_site/Demo/stocks-chart/templates/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: stocks-app
 spec:
-  replicas: 2
+  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
       app: stocks-app

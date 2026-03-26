@@ -1,3 +1,4 @@
+# Stocks_site/Demo/.dockerignore
 __pycache__/
 *.pyc
 *.pyo

@@ -1,93 +1,60 @@
-parameters:
-  pythonVersion: '3.12'
-  requirementsFile: 'requirements.txt'
-
-  imageName: 'stock-app'
-  dockerfilePath: 'Dockerfile'
-
-  sonarEnabled: false
-  sonarHostUrl: ''
-  sonarProjectKey: ''
-  sonarProjectName: ''
-  sonarTokenVarName: 'SONAR_TOKEN'
-
+# Stocks_site/azure-pipelines.yml
 trigger:
-- main
+  - main
 
-pool:
-  name: selfhosted-linux
-  demands:
-    - agent.name -equals vm-for-self-hosted
+variables:
+  - group: sonar-vars
+  - name: acrName
+    value: pratibaacr123450
+  - name: aksCluster
+    value: pratiba-aks-cluster
+  - name: resourceGroup
+    value: rg-pratiba-platform-dev
+  - name: imageName
+    value: stocks-app
+  - name: tag
+    value: $(Build.BuildId)
+  -name: poolImage
+    value: selfhosted-linux
 
-steps:
-- checkout: self
-  clean: true
+stages:
 
-# ✅ Python setup (optional but good for validation)
-- task: UsePythonVersion@0
-  displayName: "Use Python ${{ parameters.pythonVersion }}"
-  inputs:
-    versionSpec: ${{ parameters.pythonVersion }}
+- template: templates/stages/build-test-sonar-python.yml@templates
+  parameters:
+    poolImage: $(poolImage)
+    sonarEnabled: true
+    sonarProjectKey: 'stocks-project'
+    sonarHostUrl: 'http://20.127.146.185:9000'
+    sonarToken: '$(SONAR_TOKEN)'
 
-- script: |
-    python --version
-    python -m pip install --upgrade pip
-    pip install -r ${{ parameters.requirementsFile }}
-  displayName: "Install dependencies"
+- template: templates/stages/sca.yml@templates
+  parameters:
+    poolImage: $(poolImage)
+    failOnVuln: false
 
-# ✅ OPTIONAL: Sonar (keep if needed)
-- ${{ if eq(parameters.sonarEnabled, true) }}:
-  - bash: |
-      set -euo pipefail
+- template: templates/stages/docker.yml@templates
+  parameters:
+    poolImage: $(poolImage)
+    acrName: $(acrName)
+    imageName: $(imageName)
+    tag: $(tag)
 
-      SCANNER_VERSION=5.0.1.3006
-      INSTALL_DIR="$HOME/.sonar"
+- stage: Deploy
+  displayName: "Deploy to AKS"
+  jobs:
+    - job: DeployJob
+      pool:
+        name: $(poolImage)
 
-      mkdir -p "$INSTALL_DIR"
-      curl -fsSL -o "$INSTALL_DIR/scanner.zip" \
-        "https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-$SCANNER_VERSION-linux.zip"
-      unzip -o -q "$INSTALL_DIR/scanner.zip" -d "$INSTALL_DIR"
+      steps:
+        - checkout: self
 
-      SCANNER_BIN_DIR="$(dirname "$(find "$INSTALL_DIR" -type f -name sonar-scanner | head -n1)")"
-      export PATH="$SCANNER_BIN_DIR:$PATH"
-
-      sonar-scanner \
-        -Dsonar.host.url="${{ parameters.sonarHostUrl }}" \
-        -Dsonar.projectKey="${{ parameters.sonarProjectKey }}" \
-        -Dsonar.projectName="${{ parameters.sonarProjectName }}" \
-        -Dsonar.sources="." \
-        -Dsonar.login=$(SONAR_TOKEN)
-    displayName: "SonarScanner CLI"
-    env:
-      SONAR_TOKEN: $($(parameters.sonarTokenVarName))
-
-# 🚀 BUILD & PUSH DOCKER IMAGE
-- task: Docker@2
-  displayName: "Build and Push Docker Image"
-  inputs:
-    command: buildAndPush
-    repository: $(IMAGE_NAME)
-    dockerfile: ${{ parameters.dockerfilePath }}
-    containerRegistry: $(ACR_SERVICE_CONNECTION)
-    tags: |
-      $(Build.BuildId)
-      latest
-
-# 📦 Copy k8s manifests
-- task: CopyFiles@2
-  inputs:
-    SourceFolder: 'k8s'
-    Contents: '*.yaml'
-    TargetFolder: '$(Build.ArtifactStagingDirectory)/k8s'
-
-# 🏷️ Image tag info (VERY IMPORTANT FOR CD)
-- script: |
-    echo "$(ACR_LOGIN_SERVER)/$(IMAGE_NAME):$(Build.BuildId)" > $(Build.ArtifactStagingDirectory)/image-tag.txt
-    echo "$(ACR_LOGIN_SERVER)/$(IMAGE_NAME):latest" >> $(Build.ArtifactStagingDirectory)/image-tag.txt
-  displayName: "Create image-tag.txt"
-
-# 📤 Publish artifacts
-- task: PublishBuildArtifacts@1
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'drop'
+        - template: templates/steps/aks-deploy.yml@templates
+          parameters:
+            aksCluster: $(aksCluster)
+            resourceGroup: $(resourceGroup)
+            acrName: $(acrName)
+            imageName: $(imageName)
+            tag: $(tag)
+            helmRelease: 'stocks-release'
+            chartPath: 'stocks-chart'

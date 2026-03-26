@@ -1,10 +1,10 @@
-# Stocks_site/Demo/k8s/service.yaml
+# Stocks_site/Demo/stocks-chart/templates/service.yaml
 apiVersion: v1
 kind: Service
 metadata:
   name: stocks-service
 spec:
-  type: LoadBalancer
+  type: {{ .Values.service.type }}
   selector:
     app: stocks-app
   ports:

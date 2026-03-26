@@ -1,0 +1,14 @@
+# Stocks_site/Demo/stocks-chart/values.yaml
+replicaCount: 2
+
+image:
+  repository: pratibaacr123450.azurecr.io/stocks-app
+  tag: latest
+  pullPolicy: Always
+
+service:
+  type: LoadBalancer
+  port: 80
+  targetPort: 5050
+
+containerPort: 5050
